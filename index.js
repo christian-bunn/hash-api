@@ -7,11 +7,11 @@ const UserRoutes = require("./users/routes");
 const FileRoutes = require("./files/routes");
 const AuthRoutes = require("./auth/routes");
 
-// Parse JSON payloads
+
 app.use(express.json());
 app.use(cors());
 
-// Set up the server to listen on a specified port
+// listen on port 3001
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log("Server Listening on PORT:", PORT);
@@ -29,7 +29,7 @@ sequelize.sync().then(() => {
   app.listen(3000, () => console.log("Server running on port 3000"));
 });
 
-// Define the /status endpoint
+// status endpoint to test if api is running
 app.get('/status', (request, response) => {
   const status = {
     "Status": "API Running"

@@ -1,22 +1,11 @@
 // middleware/AuthMiddleware.js
 
 const jwt = require("jsonwebtoken");
-const secretKey = "your-secret-key"; // Same as used in AuthController
+const secretKey = "T47VshhfrgY7t36ezB6kqa0T"; // same key as used in authController.js
 
 module.exports = {
   check: (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-
-    if (!authHeader) {
-      return res.status(401).json({
-        status: false,
-        error: {
-          message: 'Auth headers not provided in the request.'
-        }
-      });
-    }
-
-    const token = authHeader.split(' ')[1];
+    const token = req.cookies.authToken; // reading token from cookies
 
     if (!token) {
       return res.status(401).json({

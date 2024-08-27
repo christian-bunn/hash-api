@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../users/user");
 
-const secretKey = "your-secret-key"; // Use a secure secret key
+const secretKey = "T47VshhfrgY7t36ezB6kqa0T";
 
 const encryptPassword = (password) => {
   return bcrypt.hashSync(password, 8);
@@ -43,7 +43,7 @@ module.exports = {
   login: (req, res) => {
     const { username, password } = req.body;
 
-    // Find user by username
+    // find user by username
     User.findUser({ username })
       .then((user) => {
         if (!user) {
@@ -62,11 +62,20 @@ module.exports = {
           });
         }
 
-        // Generate JWT token
+        // generation of JWT token
         const accessToken = jwt.sign({ username, userId: user.id }, secretKey, { expiresIn: "1h" });
+
+        // making JWT token as a httponly cookie
+        res.cookie('authtoken', accessToken, {
+          httpOnly: true, // prevent javascript access
+          secure: true, // ensure cookie is sent over https
+          sameSite: 'Strict', 
+          maxAge: 3600000 // expire in 1 hour
+        });
 
         return res.status(200).json({
           status: true,
+          message: "Login successful",
           token: accessToken,
         });
       })
