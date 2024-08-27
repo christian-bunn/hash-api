@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const { Sequelize } = require("sequelize");
 const User = require("./users/user");
@@ -8,6 +9,7 @@ const AuthRoutes = require("./auth/routes");
 
 // Parse JSON payloads
 app.use(express.json());
+app.use(cors());
 
 // Set up the server to listen on a specified port
 const PORT = process.env.PORT || 3001;
