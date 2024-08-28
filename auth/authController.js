@@ -24,6 +24,9 @@ module.exports = {
       .then((user) => {
         const accessToken = generateAccessToken(username, user.id);
 
+        // Set Content-Type header to application/json
+        res.setHeader('Content-Type', 'application/json');
+
         return res.status(200).json({
           status: true,
           result: {
@@ -33,6 +36,7 @@ module.exports = {
         });
       })
       .catch((err) => {
+        res.setHeader('Content-Type', 'application/json');
         return res.status(500).json({
           status: false,
           error: err,
@@ -43,10 +47,15 @@ module.exports = {
   login: (req, res) => {
     const { username, password } = req.body;
 
-    // find user by username
+    // Find user by username
     User.findUser({ username })
       .then((user) => {
         if (!user) {
+          console.log("User not found.");
+
+          // Set Content-Type header to application/json
+          res.setHeader('Content-Type', 'application/json');
+
           return res.status(404).json({
             status: false,
             error: "User not found."
@@ -56,30 +65,38 @@ module.exports = {
         // Compare provided password with the stored hashed password
         const isPasswordValid = bcrypt.compareSync(password, user.password);
         if (!isPasswordValid) {
+          console.log("Invalid password.");
+
+          res.setHeader('Content-Type', 'application/json');
           return res.status(401).json({
             status: false,
             error: "Invalid password."
           });
         }
 
-        // generation of JWT token
+        // Generate JWT token
         const accessToken = jwt.sign({ username, userId: user.id }, secretKey, { expiresIn: "1h" });
 
-        // making JWT token as a httponly cookie
-        res.cookie('authtoken', accessToken, {
-          httpOnly: true, // prevent javascript access
-          secure: true, // ensure cookie is sent over https
-          sameSite: 'Strict', 
-          maxAge: 3600000 // expire in 1 hour
+        // Set JWT token as an HttpOnly cookie
+        res.cookie('authToken', accessToken, {
+          httpOnly: true,  // Prevents JavaScript access
+          secure: process.env.NODE_ENV === 'production',   // Use true for production (with HTTPS)
+          sameSite: 'Strict', // Helps prevent CSRF attacks; can adjust to 'Lax' or 'None' as needed
+          maxAge: 3600000  // Cookie expiration time (1 hour in milliseconds)
         });
 
+        console.log("Login successful, cookie set.");
+
+        res.setHeader('Content-Type', 'application/json');
         return res.status(200).json({
           status: true,
-          message: "Login successful",
-          token: accessToken,
+          message: "Login successful"
         });
       })
       .catch((err) => {
+        console.error("Error during login:", err);
+
+        res.setHeader('Content-Type', 'application/json');
         return res.status(500).json({
           status: false,
           error: err.message,
