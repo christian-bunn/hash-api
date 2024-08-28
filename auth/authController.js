@@ -80,12 +80,13 @@ module.exports = {
         // Set JWT token as an HttpOnly cookie
         res.cookie('authToken', accessToken, {
           httpOnly: true,  // Prevents JavaScript access
-          secure: process.env.NODE_ENV === 'production',   // Use true for production (with HTTPS)
-          sameSite: 'Strict', // Helps prevent CSRF attacks; can adjust to 'Lax' or 'None' as needed
+          secure: true,   // Use true for production (with HTTPS)
+          sameSite: 'None', // Helps prevent CSRF attacks; can adjust to 'Lax' or 'None' as needed
           maxAge: 3600000  // Cookie expiration time (1 hour in milliseconds)
         });
 
         console.log("Login successful, cookie set.");
+        console.log(`Set-Cookie header: authToken=${accessToken}`);
 
         res.setHeader('Content-Type', 'application/json');
         return res.status(200).json({
