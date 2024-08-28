@@ -57,3 +57,17 @@ app.use("/files", FileRoutes);
 app.get('/status', (request, response) => {
   response.json({ "Status": "API Running" });
 });
+
+app.post('/logout', (req, res) => {
+  // Clear the auth token cookie
+  res.clearCookie('authToken', {
+      httpOnly: true,
+      secure: false,  // Set to true in production with HTTPS
+      sameSite: 'Lax', // Adjust based on your cross-origin requirements
+      path: '/',       // Ensure the cookie is cleared across all paths
+  });
+
+  // Respond with a success message
+  res.status(200).json({ message: 'Logged out successfully' });
+  console.log("the logout function was called");
+});
