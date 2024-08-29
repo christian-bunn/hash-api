@@ -1,11 +1,11 @@
 // middleware/authMiddleware.js
 const jwt = require("jsonwebtoken");
-const secretKey = "T47VshhfrgY7t36ezB6kqa0T"; // Your secret key
+const secretKey = "T47VshhfrgY7t36ezB6kqa0T"; // secrect key
 
 module.exports = {
   check: (req, res, next) => {
-      console.log("Cookies received:", req.cookies); // Log all received cookies
-      const token = req.cookies.authToken; // Get token from cookies
+      console.log("Cookies received:", req.cookies); // log received cookies
+      const token = req.cookies.authToken; // get token from cookies
 
       if (!token) {
           console.log("No token provided. Cookies:", req.cookies);
@@ -23,9 +23,9 @@ module.exports = {
                   error: "Invalid token."
               });
           }
-          req.user = decoded; // Save user info for future use
+          req.user = decoded; // saving user data
           console.log("Token verified, user authenticated.");
-          next(); // Proceed to the next middleware/route handler
+          next(); // proceed to the next middleware/route handler
       });
   }
 };

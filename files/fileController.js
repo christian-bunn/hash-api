@@ -5,10 +5,10 @@ const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
 
-// Configure multer for file storage
+// configure multer for file storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");  // Ensure this directory exists
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
@@ -51,14 +51,14 @@ module.exports = {
       }
 
       try {
-        // Calculate the hash of the uploaded file
+        // calculate the hash of the uploaded file
         const fileHash = await calculateFileHash(req.file.path);
 
         return res.status(200).json({
           status: true,
           message: "File uploaded successfully!",
           filePath: req.file.path,
-          fileHash: fileHash  // Return the file hash
+          fileHash: fileHash  // returing file hash
         });
       } catch (hashError) {
         return res.status(500).json({

@@ -47,13 +47,13 @@ module.exports = {
   login: (req, res) => {
     const { username, password } = req.body;
 
-    // Find user by username
+    // finding user by username
     User.findUser({ username })
       .then((user) => {
         if (!user) {
           console.log("User not found.");
 
-          // Set Content-Type header to application/json
+          // setting Content-Type header to application/json
           res.setHeader('Content-Type', 'application/json');
 
           return res.status(404).json({
@@ -62,7 +62,7 @@ module.exports = {
           });
         }
 
-        // Compare provided password with the stored hashed password
+        // comapre provided password with the stored hashed password
         const isPasswordValid = bcrypt.compareSync(password, user.password);
         if (!isPasswordValid) {
           console.log("Invalid password.");
@@ -74,15 +74,15 @@ module.exports = {
           });
         }
 
-        // Generate JWT token
+        // generate the JWT token
         const accessToken = jwt.sign({ username, userId: user.id }, secretKey, { expiresIn: "1h" });
 
-        // Set JWT token as an HttpOnly cookie
+        // sets the JWT token as an HttpOnly cookie
         res.cookie('authToken', accessToken, {
-          httpOnly: true,  // Prevents JavaScript access
-          secure: true,   // Use true for production (with HTTPS)
-          sameSite: 'None', // Helps prevent CSRF attacks; can adjust to 'Lax' or 'None' as needed
-          maxAge: 3600000  // Cookie expiration time (1 hour in milliseconds)
+          httpOnly: true, 
+          secure: true,
+          sameSite: 'None',
+          maxAge: 3600000 
         });
 
         console.log("Login successful, cookie set.");
