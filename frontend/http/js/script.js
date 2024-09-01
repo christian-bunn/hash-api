@@ -14,9 +14,6 @@ function showSelectedFile() {
 
 // Function to upload the file
 async function uploadFile(file) {
-    const formData = new FormData();
-    formData.append('file', file);
-
     // Display a message indicating that encryption is in progress
     const encryptionResultDiv = document.getElementById('encryptionResult');
     encryptionResultDiv.textContent = "Please wait while your file is encrypted. This may take some time with larger files.";
@@ -24,7 +21,7 @@ async function uploadFile(file) {
     try {
         const response = await fetch(`${API_BASE_URL}/files/upload`, {
             method: 'POST',
-            body: formData,
+            body: file,
             credentials: 'include' // Include cookies for authentication
         });
 
