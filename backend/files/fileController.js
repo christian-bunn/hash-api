@@ -2,7 +2,9 @@ const crypto = require('crypto');
 
 module.exports = {
   encryptFile: (req, res) => {
+    console.log("Starting to encrypt");
     res.writeHead(200, { 'Content-Type': 'application/octet-stream' });
+
     // Encrypt the file and save it
     const aesKey = crypto.randomBytes(32);
     const aesIv = crypto.randomBytes(16);
@@ -10,6 +12,7 @@ module.exports = {
 
     req.on('data', (chunk) => {
       try {
+        console.log("Writing chunk");
         res.write(cipher.update(chunk));
       } catch (err) {
         res.statusCode = 500;
@@ -19,6 +22,7 @@ module.exports = {
 
     req.on('end', () => {
       try {
+        console.log("Final chunk");
         res.write(cipher.final());
         res.end();
       } catch (err) {
@@ -28,6 +32,7 @@ module.exports = {
     });
 
     req.on('error', (err) => {
+      console.log("Error getting file");
       res.statusCode = 500;
       res.end(`Error receiving file: ${err.message}`);
     });
