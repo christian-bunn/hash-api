@@ -2,18 +2,29 @@ const crypto = require('crypto');
 
 module.exports = {
   encryptFile: (req, res) => {
-    console.log("Starting to encrypt");
+    const logWithTimestamp = (message) => {
+      console.log(`[${new Date().toISOString()}] ${message}`);
+    };
+
+    logWithTimestamp("Starting to encrypt");
     res.writeHead(200, { 'Content-Type': 'application/octet-stream' });
 
-    // Encrypt the file and save it
     const aesKey = crypto.randomBytes(32);
     const aesIv = crypto.randomBytes(16);
     const cipher = crypto.createCipheriv('aes-256-cbc', aesKey, aesIv);
 
+    let shouldContinue = true;
+
     req.on('data', (chunk) => {
       try {
-        console.log("Writing chunk");
-        res.write(cipher.update(chunk));
+        console.time("Writing chunk");
+
+        shouldContinue = res.write(cipher.update(chunk));
+
+        if (!shouldContinue) {
+          req.pause();
+          res.once('drain', () => req.resume());
+        }
       } catch (err) {
         res.statusCode = 500;
         res.end(`Error during encryption: ${err.message}`);
@@ -22,7 +33,7 @@ module.exports = {
 
     req.on('end', () => {
       try {
-        console.log("Final chunk");
+        logWithTimestamp("Final chunk");
         res.write(cipher.final());
         res.end();
       } catch (err) {
@@ -32,10 +43,9 @@ module.exports = {
     });
 
     req.on('error', (err) => {
-      console.log("Error getting file");
+      logWithTimestamp("Error receiving file");
       res.statusCode = 500;
       res.end(`Error receiving file: ${err.message}`);
     });
-
   },
 };
