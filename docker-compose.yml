@@ -8,6 +8,8 @@ services:
   backend:
     restart: unless-stopped
     build: ./backend
+    environment:
+      - ORIGIN=http://52.62.25.240:3000
     ports:
       - 3000:3000
     volumes:

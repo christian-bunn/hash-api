@@ -13,7 +13,7 @@ app.use(cookieParser());
 
 // CORS middleware
 app.use(cors({
-  origin: 'http://127.0.0.1:8080', // allowing requests from front end
+  origin: process.env.ORIGIN || 'http://127.0.0.1:8080', // allowing requests from front end
   credentials: true, // allows for cookies and credentials
   methods: 'GET, POST, PUT, DELETE',
   allowedHeaders: 'Content-Type, Authorization',

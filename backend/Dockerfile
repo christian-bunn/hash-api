@@ -13,4 +13,6 @@ COPY ./keys ./keys
 COPY ./index.js .
 RUN mkdir ./uploads
 
+ENV ORIGIN ""
+
 ENTRYPOINT ["npm", "run", "start"]
