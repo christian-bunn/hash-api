@@ -2,7 +2,7 @@ const crypto = require('crypto');
 
 module.exports = {
   encryptFile: (req, res) => {
-    // res.writeHead(200, { 'Content-Type': 'application/octet-stream' });
+    res.writeHead(200, { 'Content-Type': 'application/octet-stream' });
     // Encrypt the file and save it
     const aesKey = crypto.randomBytes(32);
     const aesIv = crypto.randomBytes(12);
