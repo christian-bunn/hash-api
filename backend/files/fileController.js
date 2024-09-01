@@ -40,7 +40,7 @@ module.exports = {
       // Encrypt the file and save it
       const aesKey = crypto.randomBytes(32);
       const aesIv = crypto.randomBytes(16);
-      const cipher = crypto.createCipheriv('aes-256-cbc', aesKey, aesIv);
+      const cipher = crypto.createCipheriv('aes-256-ccm', aesKey, aesIv);
       const inputStream = fs.createReadStream(filePath);
       const outputStream = fs.createWriteStream(encryptedFilePath);
 
