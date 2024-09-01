@@ -51,10 +51,10 @@ app.get('/status', (request, response) => {
 app.post('/logout', (req, res) => {
   // Clear the auth token cookie
   res.clearCookie('authToken', {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'Lax',
-      path: '/',
+    httpOnly: true,
+    secure: false,
+    sameSite: 'Lax',
+    path: '/',
   });
 
   // Respond with a success message
