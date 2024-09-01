@@ -1,6 +1,8 @@
 services:
   caddy:
-    build: ./caddy
+    # build: ./caddy
+    restart: unless-stopped
+    image: 901444280953.dkr.ecr.ap-southeast-2.amazonaws.com/n11092505-my-assignment-repo:caddy
     ports:
       - 80:80
       - 443:443
@@ -9,11 +11,14 @@ services:
 
   frontend:
     restart: unless-stopped
-    build: ./frontend
+    # build: ./frontend
+    image: 901444280953.dkr.ecr.ap-southeast-2.amazonaws.com/n11092505-my-assignment-repo:frontend
+
   
   backend:
     restart: unless-stopped
-    build: ./backend
+    # build: ./backend
+    image: 901444280953.dkr.ecr.ap-southeast-2.amazonaws.com/n11092505-my-assignment-repo:backend
     environment:
       - ORIGIN=https://ilovequt.lol
     volumes:
