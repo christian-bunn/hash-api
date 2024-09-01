@@ -1,5 +1,7 @@
-api.ilovequt.lol
-reverse_proxy backend:3000
+ilovequt.lol {
+    reverse_proxy frontend:80
+}
 
-ilovequt.lol
-reverse_proxy frontend:80
+api.ilovequt.lol {
+    reverse_proxy backend:3000
+}
