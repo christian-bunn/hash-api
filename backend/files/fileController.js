@@ -14,12 +14,17 @@ module.exports = {
     const cipher = crypto.createCipheriv('aes-256-cbc', aesKey, aesIv);
 
     let shouldContinue = true;
+    let chunkCounter = 0;
 
     req.on('data', (chunk) => {
       try {
-        console.time("Writing chunk");
+        const chunkLabel = `Writing chunk ${chunkCounter}`;
+        console.time(chunkLabel);
 
         shouldContinue = res.write(cipher.update(chunk));
+
+        console.timeEnd(chunkLabel);
+        chunkCounter++;
 
         if (!shouldContinue) {
           req.pause();
