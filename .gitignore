@@ -1,4 +1,4 @@
 # ignore ALL files in directory named node_modules
-node_modules/
-keys/
-uploads/
+backend/node_modules
+backend/keys
+backend/uploads

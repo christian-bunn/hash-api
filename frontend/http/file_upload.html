@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload Form</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+
+<body class="upload-page">
+    <div class="wrapper">
+        <form id="uploadForm">
+            <h1>Upload File</h1>
+
+            <div class="input-box-file">
+                <input type="file" name="file" id="uploadBtn" onchange="showSelectedFile()">
+                <label for="uploadBtn">Select File</label>
+                <i class='bx bx-upload'></i>
+            </div>
+
+            <!-- display file name -->
+            <p id="selectedFile">No file selected</p>
+
+            <button type="submit" class="btn">Upload</button>
+            
+            <!-- display encryptionResult result -->
+            <div class="register-link">
+                <p id="encryptionResult"></p>
+            </div>
+
+            <div class="register-link">
+                <p>Click here to
+                    <a onclick="logout()">logout</a>
+                    
+                </p>
+            </div>
+        </form>
+    </div>
+
+    <script src="/js/script.js"></script>
+</body>
+
+</html>
