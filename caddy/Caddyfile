@@ -3,5 +3,21 @@ ilovequt.lol {
 }
 
 api.ilovequt.lol {
-    reverse_proxy backend:3000
+    reverse_proxy backend:3000 {
+        # Disable buffering to stream requests directly
+        flush_interval -1
+
+        # Increase the max upload size
+        header_up +Content-Length {http.request.header.Content-Length}
+        header_up +Transfer-Encoding {http.request.header.Transfer-Encoding}
+
+        # Increase timeouts to handle large uploads
+        transport http {
+            read_buffer 0
+            write_buffer 0
+            read_timeout 10m
+            write_timeout 10m
+            dial_timeout 10s
+        }
+    }
 }

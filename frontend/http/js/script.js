@@ -14,9 +14,6 @@ function showSelectedFile() {
 
 // Function to upload the file
 async function uploadFile(file) {
-    const formData = new FormData();
-    formData.append('file', file);
-
     // Display a message indicating that encryption is in progress
     const encryptionResultDiv = document.getElementById('encryptionResult');
     encryptionResultDiv.textContent = "Please wait while your file is encrypted. This may take some time with larger files.";
@@ -24,7 +21,7 @@ async function uploadFile(file) {
     try {
         const response = await fetch(`${API_BASE_URL}/files/upload`, {
             method: 'POST',
-            body: formData,
+            body: file,
             credentials: 'include' // Include cookies for authentication
         });
 
@@ -32,22 +29,22 @@ async function uploadFile(file) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
-        if (data.downloadLink) {
-            // Instead of directly navigating to the download link, display it as a clickable link
-            const downloadLinkElement = document.createElement('a');
-            downloadLinkElement.href = `${API_BASE_URL}${data.downloadLink}`;
-            downloadLinkElement.textContent = "Encryption Complete! Click here to download your encrypted file";
-            downloadLinkElement.style.display = 'block'; // Ensure the link is displayed as a block
-            downloadLinkElement.style.marginTop = '10px'; // Add some space above the link
-            downloadLinkElement.setAttribute('download', '');
+        // Read the response as a binary stream
+        const blob = await response.blob(); // Create a Blob from the response stream
+        const downloadUrl = URL.createObjectURL(blob); // Create a URL for the Blob
 
-            encryptionResultDiv.textContent = ""; // Clear previous text
-            encryptionResultDiv.appendChild(downloadLinkElement); // Append the new link
+        // Create a download link
+        const downloadLinkElement = document.createElement('a');
+        downloadLinkElement.href = downloadUrl;
+        downloadLinkElement.textContent = "Encryption Complete! Click here to download your encrypted file";
+        downloadLinkElement.style.display = 'block'; // Display the link as a block
+        downloadLinkElement.style.marginTop = '10px'; // Add some space above the link
+        downloadLinkElement.setAttribute('download', 'encrypted-file'); // Set the default file name
 
-        } else {
-            throw new Error('Download link not provided');
-        }
+        // Clear previous results and display the new download link
+        encryptionResultDiv.textContent = "";
+        encryptionResultDiv.appendChild(downloadLinkElement);
+
     } catch (error) {
         console.error('Error during file upload:', error);
         encryptionResultDiv.textContent = "An error occurred during file upload.";
@@ -84,26 +81,26 @@ document.getElementById('signupForm')?.addEventListener('submit', function(event
         body: JSON.stringify({ username, password }),
         credentials: 'include'
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.status) {
-            messageDiv.textContent = "Account created successfully! Redirecting to login...";
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 1000);
-        } else {
-            messageDiv.textContent = `Error: ${data.error}`;
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        messageDiv.textContent = "An error occurred during signup.";
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status) {
+                messageDiv.textContent = "Account created successfully! Redirecting to login...";
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1000);
+            } else {
+                messageDiv.textContent = `Error: ${data.error}`;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            messageDiv.textContent = "An error occurred during signup.";
+        });
 });
 
 // form submission for login
@@ -122,26 +119,26 @@ document.getElementById('loginForm')?.addEventListener('submit', function(event)
         body: JSON.stringify({ username, password }),
         credentials: 'include'
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.status) {
-            messageDiv.textContent = "Login successful! Redirecting to file upload...";
-            setTimeout(() => {
-                window.location.href = 'file_upload.html';
-            }, 1000);
-        } else {
-            messageDiv.textContent = `Error: ${data.error}`;
-        }
-    })
-    .catch(error => {
-        console.error('Error during login:', error);
-        messageDiv.textContent = "An error occurred during login.";
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status) {
+                messageDiv.textContent = "Login successful! Redirecting to file upload...";
+                setTimeout(() => {
+                    window.location.href = 'file_upload.html';
+                }, 1000);
+            } else {
+                messageDiv.textContent = `Error: ${data.error}`;
+            }
+        })
+        .catch(error => {
+            console.error('Error during login:', error);
+            messageDiv.textContent = "An error occurred during login.";
+        });
 });
 
 // function for logout
@@ -153,14 +150,14 @@ function logout() {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => {
-        if (response.ok) {
-            window.location.href = '/login.html';
-        } else {
-            console.error('Logout failed');
-        }
-    })
-    .catch(error => {
-        console.error('Error during logout:', error);
-    });
+        .then(response => {
+            if (response.ok) {
+                window.location.href = '/login.html';
+            } else {
+                console.error('Logout failed');
+            }
+        })
+        .catch(error => {
+            console.error('Error during logout:', error);
+        });
 }

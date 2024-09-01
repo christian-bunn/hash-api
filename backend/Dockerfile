@@ -9,7 +9,6 @@ COPY ./auth ./auth
 COPY ./files ./files
 COPY ./middleware ./middleware
 COPY ./users ./users
-COPY ./keys ./keys
 COPY ./index.js .
 RUN mkdir ./uploads
 
