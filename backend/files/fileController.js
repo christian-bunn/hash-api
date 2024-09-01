@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const { pipeline } = require('stream');
+const { Transform } = require('stream');
 
 module.exports = {
   encryptFile: (req, res) => {
@@ -11,13 +12,24 @@ module.exports = {
     logWithTimestamp(`Transfer-Encoding: ${req.headers['transfer-encoding'] || 'not set'}`);
     logWithTimestamp(`Content-Type: ${req.headers['content-type'] || 'not set'}`);
     res.writeHead(200, { 'Content-Type': 'application/octet-stream' });
-    const aesKey = crypto.randomBytes(32);
-    const aesIv = crypto.randomBytes(16);
-    const cipher = crypto.createCipheriv('aes-256-cbc', aesKey, aesIv);
+
+    // Create a custom Transform stream to perform the encryption 10 times
+    const encryptStream = new Transform({
+      transform(chunk, encoding, callback) {
+        let encryptedChunk = chunk;
+        for (let i = 0; i < 100; i++) {
+          const aesKey = crypto.randomBytes(32);
+          const aesIv = crypto.randomBytes(16);
+          const cipher = crypto.createCipheriv('aes-256-cbc', aesKey, aesIv);
+          encryptedChunk = Buffer.concat([cipher.update(encryptedChunk), cipher.final()]);
+        }
+        callback(null, encryptedChunk);
+      }
+    });
 
     pipeline(
       req,
-      cipher,
+      encryptStream,
       res,
       (err) => {
         if (err) {
