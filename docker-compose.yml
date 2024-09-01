@@ -1,0 +1,19 @@
+services:
+  frontend:
+    restart: unless-stopped
+    build: ./frontend
+    ports:
+      - 8080:80
+  
+  backend:
+    restart: unless-stopped
+    build: ./backend
+    ports:
+      - 3000:3000
+    volumes:
+      - db:/api/storage
+  
+volumes:
+  db:
+    name: backend-db
+
