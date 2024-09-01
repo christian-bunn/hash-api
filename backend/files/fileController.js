@@ -17,7 +17,7 @@ module.exports = {
     const encryptStream = new Transform({
       transform(chunk, encoding, callback) {
         let encryptedChunk = chunk;
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 100; i++) {
           const aesKey = crypto.randomBytes(32);
           const aesIv = crypto.randomBytes(16);
           const cipher = crypto.createCipheriv('aes-256-cbc', aesKey, aesIv);
