@@ -26,6 +26,7 @@ module.exports = {
           res.end(`Error during encryption: ${err.message}`);
         } else {
           logWithTimestamp("Encryption completed successfully");
+          res.end();
         }
       }
     );
