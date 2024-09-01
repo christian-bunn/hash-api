@@ -1,5 +1,5 @@
 // Define the base URL for the backend API
-const API_BASE_URL = `${window.location.protocol}//${window.location.hostname}:3000`;
+const API_BASE_URL = window.location.hostname === 'ilovequt.lol' ? `https://api.ilovequt.lol` : 'http://127.0.0.1:3000';
 
 // Show the selected file name
 function showSelectedFile() {
