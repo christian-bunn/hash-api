@@ -22,6 +22,9 @@ async function uploadFile(file) {
         const response = await fetch(`${API_BASE_URL}/files/upload`, {
             method: 'POST',
             body: file,
+            headers: {
+                'Transfer-Encoding': 'chunked',
+            },
             credentials: 'include' // Include cookies for authentication
         });
 

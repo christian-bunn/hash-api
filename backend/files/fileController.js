@@ -8,8 +8,9 @@ module.exports = {
     };
 
     logWithTimestamp("Starting to encrypt");
+    logWithTimestamp(`Transfer-Encoding: ${req.headers['transfer-encoding'] || 'not set'}`);
+    logWithTimestamp(`Content-Type: ${req.headers['content-type'] || 'not set'}`);
     res.writeHead(200, { 'Content-Type': 'application/octet-stream' });
-
     const aesKey = crypto.randomBytes(32);
     const aesIv = crypto.randomBytes(16);
     const cipher = crypto.createCipheriv('aes-256-cbc', aesKey, aesIv);
