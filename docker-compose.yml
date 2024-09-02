@@ -24,6 +24,10 @@ services:
     volumes:
       - db:/api/storage
   
+  dns-updater:
+    build: ./dns-updater
+    restart: unless-stopped
+
 volumes:
   db:
     name: backend-db
